@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Created-By: IntelliJ IDEA
+Built-By: me
+Build-Jdk: 11.0.4
+Implementation-Title: conference
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: com.pluralsight
+Main-Class: ${start-class}
+
