@@ -7,21 +7,40 @@
     <artifactId>spring-security-test</artifactId>
     <scope>test</scope>
 </dependency>
+<dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>jstl</artifactId>
+</dependency>
 
 
 1) copy registration.jsp and create login.jsp
-2) add jstl mvn dependency
-    <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>jstl</artifactId>
-    </dependency>
-3) create ConferenceSecurityConfig.java
+    add jstl taglib
+    
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    change title
+    change form
+    <div>
+        <h1>Login</h1>
+    </div>
+
+    <div> <c:if test="${not empty param.error}" >Invalid username and password.</c:if>
+    </div>
+
+
+    <form:form action="perform_login" method="post">
+        <form:errors path="*" cssClass="errorblock" element="div" />
+        <div><label> User Name : <input type="text" name="username"/> </label></div>
+        <div><label> Password: <input type="password" name="password"/> </label></div>
+        <input type="submit" class="btn btn-lg btn-primary" role="button" value="Login"/>
+    </form:form>
+
+2) create ConferenceSecurityConfig.java
 
 @Configuration
 @EnableWebSecurity
 public class ConferenceSecurityConfig extends WebSecurityConfigurerAdapter {
 
-4) add and explain
+3) add and explain
 
 @Override
     protected void configure(final HttpSecurity http) throws Exception {
@@ -41,7 +60,7 @@ public class ConferenceSecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
-5) add and explain (two parts)
+4) add and explain (two parts)
 
 @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
@@ -54,5 +73,12 @@ public class ConferenceSecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+5) add controller
+
+@Override
+       public void addViewControllers(final ViewControllerRegistry registry) {
+           registry.addViewController("/login");
+       }
 
 6) Run example!!!
