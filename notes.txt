@@ -1,0 +1,58 @@
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-test</artifactId>
+    <scope>test</scope>
+</dependency>
+
+
+1) copy registration.jsp and create login.jsp
+2) add jstl mvn dependency
+    <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>jstl</artifactId>
+    </dependency>
+3) create ConferenceSecurityConfig.java
+
+@Configuration
+@EnableWebSecurity
+public class ConferenceSecurityConfig extends WebSecurityConfigurerAdapter {
+
+4) add and explain
+
+@Override
+    protected void configure(final HttpSecurity http) throws Exception {
+        http
+                .authorizeRequests()
+                //.antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/anonymous*").anonymous()
+                .antMatchers("/login*").permitAll()
+                .antMatchers("/assets/css/**", "assets/js/**", "/images/**").permitAll()
+                .antMatchers("/index*").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .loginProcessingUrl("/perform_login")
+                .defaultSuccessUrl("/", true);
+
+    }
+
+5) add and explain (two parts)
+
+@Override
+    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+                .withUser("bryan").password(passwordEncoder().encode("pass")).roles("USER");
+
+    }
+
+@Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+6) Run example!!!
