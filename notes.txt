@@ -15,7 +15,7 @@
 
 1) copy registration.jsp and create login.jsp
     add jstl taglib
-    
+
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     change title
     change form
