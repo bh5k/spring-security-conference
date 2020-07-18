@@ -1,38 +1,22 @@
 <dependency>
     <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-security</artifactId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
 </dependency>
+
 <dependency>
-    <groupId>org.springframework.security</groupId>
-    <artifactId>spring-security-test</artifactId>
-    <scope>test</scope>
-</dependency>
-<dependency>
-    <groupId>javax.servlet</groupId>
-    <artifactId>jstl</artifactId>
+    <groupId>com.h2database</groupId>
+    <artifactId>h2</artifactId>
+    <scope>runtime</scope>
 </dependency>
 
 
-1) copy registration.jsp and create login.jsp
-    add jstl taglib
+1) add to application.properties
 
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-    change title
-    change form
-    <div>
-        <h1>Login</h1>
-    </div>
-
-    <div> <c:if test="${not empty param.error}" >Invalid username and password.</c:if>
-    </div>
-
-
-    <form:form action="perform_login" method="post">
-        <form:errors path="*" cssClass="errorblock" element="div" />
-        <div><label> User Name : <input type="text" name="username"/> </label></div>
-        <div><label> Password: <input type="password" name="password"/> </label></div>
-        <input type="submit" class="btn btn-lg btn-primary" role="button" value="Login"/>
-    </form:form>
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
 
 2) create ConferenceSecurityConfig.java
 
@@ -40,45 +24,38 @@
 @EnableWebSecurity
 public class ConferenceSecurityConfig extends WebSecurityConfigurerAdapter {
 
-3) add and explain
+3) switch builder
 
-@Override
-    protected void configure(final HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                //.antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/anonymous*").anonymous()
-                .antMatchers("/login*").permitAll()
-                .antMatchers("/assets/css/**", "assets/js/**", "/images/**").permitAll()
-                .antMatchers("/index*").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/login")
-                .loginProcessingUrl("/perform_login")
-                .defaultSuccessUrl("/", true);
+auth.jdbcAuthentication()
+              .dataSource(dataSource);
 
-    }
+4) docker-compose
 
-4) add and explain (two parts)
 
-@Override
-    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("bryan").password(passwordEncoder().encode("pass")).roles("USER");
 
-    }
+4) mysql workbench
 
-@Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+CREATE TABLE users (
+  username VARCHAR(50) NOT NULL,
+  password VARCHAR(100) NOT NULL,
+  enabled TINYINT NOT NULL DEFAULT 1,
+  PRIMARY KEY (username)
+);
 
-5) add controller
+CREATE TABLE authorities (
+  username VARCHAR(50) NOT NULL,
+  authority VARCHAR(50) NOT NULL,
+  FOREIGN KEY (username) REFERENCES users(username)
+);
 
-@Override
-       public void addViewControllers(final ViewControllerRegistry registry) {
-           registry.addViewController("/login");
-       }
+CREATE UNIQUE INDEX ix_auth_username
+  on authorities (username,authority);
 
-6) Run example!!!
+
+  INSERT INTO users (username, password, enabled)
+  values ('bryan',
+    '$2a$10$a07FaSKwo2xAwEj4UJYa0etu8sY5o9onG/0psQ2FxzjviueQUYnbm',
+    1);
+
+INSERT INTO authorities (username, authority)
+  values ('bryan', 'ROLE_USER');

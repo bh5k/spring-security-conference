@@ -43,11 +43,7 @@ public class ConferenceSecurityConfig extends WebSecurityConfigurerAdapter {
         //auth.inMemoryAuthentication()
         //        .withUser("bryan").password(passwordEncoder().encode("pass")).roles("USER");
         auth.jdbcAuthentication()
-                .dataSource(dataSource)
-                .withDefaultSchema()
-                .withUser(User.withUsername("bryan")
-                        .password(passwordEncoder().encode("pass"))
-                        .roles("USER"));
+                .dataSource(dataSource);
 
     }
 
