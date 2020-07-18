@@ -35,7 +35,9 @@ public class ConferenceSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-                .withUser("bryan").password(passwordEncoder().encode("pass")).roles("USER");
+                .withUser("bryan")
+                .password(passwordEncoder().encode("pass"))
+                .roles("USER");
 
     }
 
