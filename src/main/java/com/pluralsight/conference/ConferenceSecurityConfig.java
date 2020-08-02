@@ -42,8 +42,18 @@ public class ConferenceSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
         //auth.inMemoryAuthentication()
         //        .withUser("bryan").password(passwordEncoder().encode("pass")).roles("USER");
-        auth.jdbcAuthentication()
-                .dataSource(dataSource);
+        //auth.jdbcAuthentication()
+        //        .dataSource(dataSource);
+
+        auth.ldapAuthentication()
+                .userDnPatterns("uid={0},ou=people")
+                .groupSearchBase("ou=groups")
+                .contextSource()
+                .url("ldap://localhost:8389/dc=pluralsight,dc=com")
+                .and()
+                .passwordCompare()
+                .passwordEncoder(passwordEncoder())
+                .passwordAttribute("userPassword");
 
     }
 
