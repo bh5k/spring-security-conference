@@ -1,5 +1,6 @@
 package com.pluralsight.conference;
 
+import com.pluralsight.conference.service.ConferenceUserDetailsContextMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,9 @@ public class ConferenceSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
 
+    @Autowired
+    private ConferenceUserDetailsContextMapper ctxMapper;
+
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http
@@ -34,6 +38,7 @@ public class ConferenceSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/perform_login")
+                
                 .defaultSuccessUrl("/", true);
 
     }
@@ -53,7 +58,9 @@ public class ConferenceSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .passwordCompare()
                 .passwordEncoder(passwordEncoder())
-                .passwordAttribute("userPassword");
+                .passwordAttribute("userPassword")
+                .and()
+                .userDetailsContextMapper(ctxMapper);
 
     }
 

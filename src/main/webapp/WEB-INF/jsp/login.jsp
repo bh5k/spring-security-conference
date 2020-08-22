@@ -41,7 +41,8 @@
         <h1>Login</h1>
     </div>
 
-    <div> <c:if test="${not empty param.error}" >Invalid username and password.</c:if>
+    <div>
+        <c:if test="${not empty param.error}" >Invalid username and password.</c:if>
     </div>
 
 
