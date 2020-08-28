@@ -36,6 +36,7 @@ public class ConferenceSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login*").permitAll()
                 .antMatchers("/assets/css/**", "assets/js/**", "/images/**").permitAll()
                 .antMatchers("/index*").permitAll()
+                .antMatchers("/account*").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
@@ -74,9 +75,11 @@ public class ConferenceSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
         //auth.inMemoryAuthentication()
         //        .withUser("bryan").password(passwordEncoder().encode("pass")).roles("USER");
-        //auth.jdbcAuthentication()
-        //        .dataSource(dataSource);
+        auth.jdbcAuthentication()
+                .dataSource(dataSource)
+                .passwordEncoder(passwordEncoder());
 
+        /*
         auth.ldapAuthentication()
                 .userDnPatterns("uid={0},ou=people")
                 .groupSearchBase("ou=groups")
@@ -88,6 +91,7 @@ public class ConferenceSecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordAttribute("userPassword")
                 .and()
                 .userDetailsContextMapper(ctxMapper);
+        */
 
     }
 
