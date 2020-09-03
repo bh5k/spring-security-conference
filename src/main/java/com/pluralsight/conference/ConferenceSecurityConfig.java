@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
@@ -34,6 +33,7 @@ public class ConferenceSecurityConfig extends WebSecurityConfigurerAdapter {
                 //.antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/anonymous*").anonymous()
                 .antMatchers("/login*").permitAll()
+                .antMatchers("/account*").permitAll()
                 .antMatchers("/assets/css/**", "assets/js/**", "/images/**").permitAll()
                 .antMatchers("/index*").permitAll()
                 .anyRequest().authenticated()
@@ -74,9 +74,11 @@ public class ConferenceSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
         //auth.inMemoryAuthentication()
         //        .withUser("bryan").password(passwordEncoder().encode("pass")).roles("USER");
-        //auth.jdbcAuthentication()
-        //        .dataSource(dataSource);
+        auth.jdbcAuthentication()
+                .dataSource(dataSource)
+                .passwordEncoder(passwordEncoder());
 
+        /*
         auth.ldapAuthentication()
                 .userDnPatterns("uid={0},ou=people")
                 .groupSearchBase("ou=groups")
@@ -88,6 +90,7 @@ public class ConferenceSecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordAttribute("userPassword")
                 .and()
                 .userDetailsContextMapper(ctxMapper);
+                */
 
     }
 
