@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
-    <title>Login</title>
+    <title>Reset Password</title>
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
@@ -38,31 +38,24 @@
 
 <div class="container">
     <div>
-        <h1>Login</h1>
+        <h1>Reset Password</h1>
     </div>
 
-    <c:if test="${not empty param.logout}" >
+    <c:if test="${not empty param.reset}" >
         <div class="alert alert-success" role="alert">
-            Logout was successful!
+            Your password has been reset!
         </div>
     </c:if>
 
-    <div class="error">
-        <c:if test="${not empty param.error}" >Invalid username and password.</c:if>
-    </div>
-
-
-    <form:form action="perform_login" method="post">
+    <form:form modelAttribute="password" method="post">
         <form:errors path="*" cssClass="errorblock" element="div" />
-        <div><label> User Name : <input type="text" name="username"/> </label></div>
-        <div><label> Password: <input type="password" name="password"/> </label></div>
-        <div><label> Remember Me: <input type="checkbox" name="remember-me" /> </label></div>
-        <input type="submit" class="btn btn-lg btn-primary" role="button" value="Login"/>
-        <a href="password">Forgot password</a>
+        <div><label> Password : <input type="password" name="password"/> </label></div>
+        <div><label> Confirm Password : <input type="password" name="matchingPassword"/> </label></div>
+        <input type="submit" class="btn btn-lg btn-primary" role="button" value="Reset Password"/>
     </form:form>
 
 
-<div class="control-group">
+    <div class="control-group">
     </div>
 </div>
 </body>
