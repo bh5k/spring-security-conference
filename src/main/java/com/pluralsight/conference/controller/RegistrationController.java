@@ -1,6 +1,8 @@
 package com.pluralsight.conference.controller;
 
 import com.pluralsight.conference.model.Registration;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +20,13 @@ public class RegistrationController {
     }
 
     @PostMapping("registration")
+    @Secured("ROLE_USER")
     public String addRegistration(@Valid @ModelAttribute ("registration")
                                               Registration registration,
-                                  BindingResult result) {
+                                  BindingResult result,
+                                  Authentication auth) {
+
+        System.out.println("Auth: " + auth.getPrincipal());
 
         if(result.hasErrors()) {
             System.out.println("There were errors");

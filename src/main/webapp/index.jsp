@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -32,11 +34,20 @@
 <body>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
   <a class="navbar-brand" href="#">Get Started</a>
+  <a class="navbar-brand" href="<c:out value='perform_logout'/>">Logout</a>
 </nav>
 
 <main role="main" class="container">
   <div class="jumbotron">
     <h1>Welcome to the Conference App!</h1>
+
+    <sec:authorize access="!isAuthenticated()">
+      <a href="login">Login</a>
+    </sec:authorize>
+    <sec:authorize access="isAuthenticated()">
+      Welcome Back, <sec:authentication property="name" />
+    </sec:authorize>
+
     <p class="lead">To get started, we need to add a Registration.</p>
     <a class="btn btn-lg btn-primary" href="registration" role="button">
       Add Registration
