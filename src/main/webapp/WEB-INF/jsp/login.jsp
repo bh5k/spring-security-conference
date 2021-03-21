@@ -44,7 +44,6 @@
     <div> <c:if test="${not empty param.error}" >Invalid username and password.</c:if>
     </div>
 
-
     <form:form action="perform_login" method="post">
         <form:errors path="*" cssClass="errorblock" element="div" />
         <div><label> User Name : <input type="text" name="username"/> </label></div>
